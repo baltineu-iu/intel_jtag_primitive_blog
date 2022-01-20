@@ -110,6 +110,9 @@ module top(
     wire captureuser;
     assign captureuser = capture_dr && (ir_reg == 10'h00c || ir_reg == 10'h00e);
 
+    wire updateuser_c;
+    assign updateuser_c = (jtag_fsm_state == jtag_update_dr) && (ir_reg == 10'h00c || ir_reg == 10'h00e);
+        
     //============================================================
     // USER0 and USER1 Chains
     //============================================================
@@ -133,7 +136,7 @@ module top(
             if (shiftuser)
                 user0_shiftreg  <= { tdiutap, user0_shiftreg[7:1] };
     
-            if (updateuser)
+            if (updateuser_c)
                 user0_reg       <= user0_shiftreg;
         end
         else begin
@@ -143,7 +146,7 @@ module top(
             if (shiftuser) 
                 user1_shiftreg  <= { tdiutap, user1_shiftreg[7:1] };
     
-            if (updateuser) 
+            if (updateuser_c) 
                 user1_reg       <= user1_shiftreg;
         end
     end
